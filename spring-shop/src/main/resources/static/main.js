@@ -75,6 +75,27 @@ function updateCart(cartId, quantity){
 	})
 }
 
+function deleteCart(cartId){
+	fetch(`/cart/${cartId}`, {
+			method: 'DELETE'
+		})
+	.then(response => {
+		if(!response.ok){
+			return response.json()
+			.then(errorBody => {
+				throw new Error(errorBody.detail);
+			});
+		}
+	})
+	.then(() => {
+		getAllCart();
+	})
+	.catch(error => {
+		window.location.href = '/error.html';
+		console.log(error);
+	})
+}
+
 function getAllCart(){
 	fetch('/cart')
 	.then(response => {
@@ -100,6 +121,7 @@ function getAllCart(){
 					/>
 				</td>
 				<td>${cart.product.price * cart.quantity}</td>
+				<td><button onclick=deleteCart(${cart.id})>削除</button></td>
 			`;
 			prodcutList.appendChild(row);
 		})
