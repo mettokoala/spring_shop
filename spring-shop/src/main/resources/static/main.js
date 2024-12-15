@@ -50,6 +50,31 @@ function addToCart(productId){
 	})
 }
 
+function updateCart(cartId, quantity){
+	fetch(`/cart`, {
+		method: 'PUT',
+		headers: {
+		    "Content-Type": "application/json",
+		  },
+		body: JSON.stringify({ id: cartId, quantity: quantity })
+	})
+	.then(response => {
+		if(!response.ok){
+			return response.json()
+			.then(errorBody => {
+				throw new Error(errorBody.detail);
+			});
+		}
+	})
+	.then(() => {
+		getAllCart();
+	})
+	.catch(error => {
+		window.location.href = '/error.html';
+		console.log(error);
+	})
+}
+
 function getAllCart(){
 	fetch('/cart')
 	.then(response => {
@@ -68,7 +93,12 @@ function getAllCart(){
 			const row = document.createElement('tr')
 			row.innerHTML = `
 				<td>${cart.product.name}</td>
-				<td>${cart.quantity}</td>
+				<td>
+					<input type="number" min="1" 
+					value="${cart.quantity}"
+					onchange="updateCart(${cart.id}, this.value)"
+					/>
+				</td>
 				<td>${cart.product.price * cart.quantity}</td>
 			`;
 			prodcutList.appendChild(row);
