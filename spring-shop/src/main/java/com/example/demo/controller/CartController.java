@@ -42,4 +42,9 @@ public class CartController {
 	public void deleteCart(@PathVariable Long cartId) {
 		cartService.deleteCart(cartId);
 	}
+	
+	@PostMapping("/purchase")
+	public void purchaseCartItem() {
+		cartService.purchaseCart();
+	}
 }
